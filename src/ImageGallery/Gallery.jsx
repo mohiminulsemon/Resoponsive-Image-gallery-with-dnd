@@ -58,12 +58,15 @@ function Gallery() {
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
 
+  // ---------- load images -----------
   useEffect(() => {
     setTimeout(() => {
       setImages(initialImages);
       setIsLoading(false);
     }, 2000);
   }, []);
+
+  // ----------- image selection -------------
 
   const toggleSelection = (id) => {
     if (selectedImages.includes(id)) {
@@ -72,6 +75,9 @@ function Gallery() {
       setSelectedImages([...selectedImages, id]);
     }
   };
+
+
+  // ---------- delete selected images -----------
 
   const deleteSelectedImages = () => {
     const remainingImages = images.filter(
@@ -97,6 +103,9 @@ function Gallery() {
       toast.success(`${uploadedImages.length} image(s) added successfully`);
     }
   };
+
+
+  // ----------- drag and drop logic -------------
 
   const handleDragStart = (event, id) => {
     event.dataTransfer.setData("imageId", id);
@@ -129,12 +138,16 @@ function Gallery() {
           <div className="text-xl font-bold p-5 text-center">Loading...</div>
         ) : (
           <>
+            {/* Header with delete button */}
+
             <Header selectedImages={selectedImages} deleteSelectedImages={deleteSelectedImages} />
             <hr className="border-0 h-1 bg-gray-500 mb-3" />
             <div
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-2 w-[90%] mx-auto my-2"
               onDragOver={handleDragOver}
             >
+              {/* Image items */}
+
               {images.map((image, index) => (
                 <ImageItem
                   key={image.id}
@@ -146,6 +159,8 @@ function Gallery() {
                   index={index}
                 />
               ))}
+
+              {/* Add image card function */}
               {images.length < 12 && (
                 <div className="col-span-1 h-42 w-full rounded-xl border-dashed border-2 flex flex-col items-center justify-center">
                   <label htmlFor="image-upload" className="cursor-pointer">

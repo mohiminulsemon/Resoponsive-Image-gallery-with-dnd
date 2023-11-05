@@ -1,4 +1,3 @@
-import React from "react";
 import { BsCheckSquareFill } from "react-icons/bs";
 
 const Header = ({ selectedImages, deleteSelectedImages }) => {
