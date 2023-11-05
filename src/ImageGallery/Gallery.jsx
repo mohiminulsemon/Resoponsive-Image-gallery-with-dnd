@@ -2,6 +2,8 @@ import  { useEffect, useState } from "react";
 import { FaImage } from "react-icons/fa";
 import Header from "./Header";
 import ImageItem from "./ImageItem";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const initialImages = [
     {
@@ -56,11 +58,10 @@ function Gallery() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate an API call or loading process
     setTimeout(() => {
       setImages(initialImages);
       setIsLoading(false);
-    }, 2000); // Adjust the time as needed
+    }, 2000);
   }, []);
 
   const toggleSelection = (id) => {
@@ -77,6 +78,7 @@ function Gallery() {
     );
     setImages(remainingImages);
     setSelectedImages([]);
+    toast.success("Images deleted successfully");
   };
 
   const handleDragStart = (event, id) => {
@@ -137,6 +139,7 @@ function Gallery() {
           </>
         )}
       </div>
+      <ToastContainer /> 
     </section>
   );
 }
