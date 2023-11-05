@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useEffect, useState } from "react";
 import { FaImage } from "react-icons/fa";
 import Header from "./Header";
 import ImageItem from "./ImageItem";
@@ -51,8 +51,17 @@ const initialImages = [
   ];
 
 function Gallery() {
-  const [images, setImages] = useState(initialImages);
+  const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate an API call or loading process
+    setTimeout(() => {
+      setImages(initialImages);
+      setIsLoading(false);
+    }, 2000); // Adjust the time as needed
+  }, []);
 
   const toggleSelection = (id) => {
     if (selectedImages.includes(id)) {
@@ -97,30 +106,36 @@ function Gallery() {
   return (
     <section className="w-full min-h-screen flex justify-center items-center bg-slate-200">
       <div className="w-[90%] h-auto my-0 mx-auto bg-white rounded-lg">
-        <Header selectedImages={selectedImages} deleteSelectedImages={deleteSelectedImages} />
-        <hr className="border-0 h-1 bg-gray-500 mb-3" />
-        <div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-2 w-[90%] mx-auto my-2"
-          onDragOver={handleDragOver}
-        >
-          {images.map((image, index) => (
-            <ImageItem
-              key={image.id}
-              image={image}
-              selectedImages={selectedImages}
-              toggleSelection={toggleSelection}
-              handleDragStart={handleDragStart}
-              handleDrop={handleDrop}
-              index={index}
-            />
-          ))}
-          {images.length < 12 && (
-            <div className="col-span-1 h-42 w-full rounded-xl border-dashed border-2 flex flex-col items-center justify-center">
-              <span> <FaImage className="text-xl" /> </span>
-              <p className="font-semibold text-lg">Add Images</p>
+        {isLoading ? (
+          <div className="text-xl font-bold p-5 text-center">Loading...</div>
+        ) : (
+          <>
+            <Header selectedImages={selectedImages} deleteSelectedImages={deleteSelectedImages} />
+            <hr className="border-0 h-1 bg-gray-500 mb-3" />
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-2 w-[90%] mx-auto my-2"
+              onDragOver={handleDragOver}
+            >
+              {images.map((image, index) => (
+                <ImageItem
+                  key={image.id}
+                  image={image}
+                  selectedImages={selectedImages}
+                  toggleSelection={toggleSelection}
+                  handleDragStart={handleDragStart}
+                  handleDrop={handleDrop}
+                  index={index}
+                />
+              ))}
+              {images.length < 12 && (
+                <div className="col-span-1 h-42 w-full rounded-xl border-dashed border-2 flex flex-col items-center justify-center">
+                  <span> <FaImage className="text-xl" /> </span>
+                  <p className="font-semibold text-lg">Add Images</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </section>
   );
