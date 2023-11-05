@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import { FaImage } from "react-icons/fa";
 import Header from "./Header";
 import ImageItem from "./ImageItem";
@@ -56,6 +56,7 @@ function Gallery() {
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -79,6 +80,22 @@ function Gallery() {
     setImages(remainingImages);
     setSelectedImages([]);
     toast.success("Images deleted successfully");
+  };
+
+  const handleImageUpload = (event) => {
+    const uploadedImages = Array.from(event.target.files);
+
+    if (uploadedImages.length > 0) {
+      const newImages = uploadedImages.map((file) => {
+        const id = String(Math.random()); 
+        const src = URL.createObjectURL(file); 
+        return { id, src };
+      });
+
+      setImages((prevImages) => [...prevImages, ...newImages]);
+
+      toast.success(`${uploadedImages.length} image(s) added successfully`);
+    }
   };
 
   const handleDragStart = (event, id) => {
@@ -131,8 +148,18 @@ function Gallery() {
               ))}
               {images.length < 12 && (
                 <div className="col-span-1 h-42 w-full rounded-xl border-dashed border-2 flex flex-col items-center justify-center">
-                  <span> <FaImage className="text-xl" /> </span>
-                  <p className="font-semibold text-lg">Add Images</p>
+                  <label htmlFor="image-upload" className="cursor-pointer">
+                  <p className="font-semibold text-lg flex flex-col items-center"> <span> <FaImage className="text-xl" /> </span>Add Images</p>
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  style={{ display: "none" }}
+                  id="image-upload"
+                  ref={fileInputRef}
+                />
                 </div>
               )}
             </div>
